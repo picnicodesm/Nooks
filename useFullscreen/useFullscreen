@@ -1,0 +1,38 @@
+const useFullscreen = (callback) => {
+  const element = useRef();
+  const runCb = (isFull) => {
+    if (callback && typeof callback === "function") {
+      callback(isFull);
+    }
+  };
+  const triggerFull = () => {
+    if (element.current) {
+      if (document.requestFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozRequestFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitRequestFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msRequestFullscreen) {
+        document.msExitFullscreen();
+      }
+      runCb(true);
+    }
+  };
+  const exitFull = () => {
+    const checkFullScreen = document.fullscreenElement;
+    if (checkFullScreen !== null) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+    runCb(false);
+  };
+  return { element, triggerFull, exitFull };
+};
